@@ -1,4 +1,4 @@
-# Webpack React Starter 📦 🔥 🚀
+# 📦 Webpack React Starter
 
 This is my personal Webpack config starter for React projects. There are two Webpack configs for `development` and `production` modes. Feel free to use it and modify it to your needs.
 
@@ -10,14 +10,14 @@ This is my personal Webpack config starter for React projects. There are two Web
 ✅ Custom HTML template
 
 ## What's inside
-✅ [Sass](https://sass-lang.com/) support
-✅ [Autoprefixer](https://github.com/postcss/autoprefixer) support
-✅ Images and icons support
-✅ Fonts support
-✅ Source maps enabled (in development mode)
-✅ Optimized assets for production
-❌ Eslint support (comming soon)
-❌ TypeScript support (comming soon)
+* ✅ [Sass](https://sass-lang.com/) support
+* ✅ [Autoprefixer](https://github.com/postcss/autoprefixer) support
+* ✅ Images and icons support
+* ✅ Fonts support
+* ✅ Source maps enabled (in development mode)
+* ✅ Optimized assets for production
+* ❌ Eslint support (comming soon)
+* ❌ TypeScript support (comming soon)
 
 ## Commands
 - `npm start` start project in development mode
@@ -26,4 +26,4 @@ This is my personal Webpack config starter for React projects. There are two Web
 ## Local server
 `http://localhost:8080/`
 
-# Happy Coding! 😎
+### Happy Coding! 😎
