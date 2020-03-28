@@ -8,6 +8,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'main.bundle.js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -53,6 +54,9 @@ module.exports = {
         use: ['file-loader'],
       },
     ],
+  },
+  devServer: {
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
