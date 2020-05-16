@@ -1,6 +1,6 @@
 # 📦 Webpack React Starter
 
-This is my personal Webpack config starter for React projects. There are two Webpack configs for `development` and `production` modes. Feel free to use it and modify it to your needs.
+This is Webpack config starter for React projects. There are two Webpack configs for `development` and `production` modes. Feel free to use it and modify it to your needs.
 
 ## Features
 - React 16
@@ -16,8 +16,7 @@ This is my personal Webpack config starter for React projects. There are two Web
 - Fonts support
 - Source maps enabled (in development mode)
 - Optimized assets for production
-- Eslint support (comming soon)
-- TypeScript support (comming soon)
+- For TypeScript edition see [typescript](https://github.com/anreut/webpack-react-starter/tree/typescript) branch
 
 ## Commands
 - `npm start` start project in development mode
