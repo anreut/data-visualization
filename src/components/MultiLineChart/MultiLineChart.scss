@@ -1,0 +1,20 @@
+$gridColor: #c9c6c6;
+
+#yAxis {
+    .tick {
+        line {
+            stroke: $gridColor;
+        }
+        text {
+            fill: $gridColor;
+        }
+    }
+}
+
+#xAxis {
+    .tick {
+        text {
+            fill: $gridColor;
+        }
+    }
+}
