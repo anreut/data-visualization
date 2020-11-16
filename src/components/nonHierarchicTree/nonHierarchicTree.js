@@ -49,10 +49,8 @@ const data = [
 ];
 
 const nonHierarchicTree = () => {
-  // const svgWidth = 900;
   const svgWidth = 900;
-  const svgHeight = 500;
-  // const svgHeight = svgWidth / 2; // 450
+  const svgHeight = 700;
 
   const canvas = useRef(null);
 
@@ -77,23 +75,31 @@ const nonHierarchicTree = () => {
           .join('circle')
           .attr('fill', 'red')
           .attr('id', (d) => d.id)
-          .attr('r', 10)
+          .attr('r', 25)
           .attr('cx', (d) => {
             // Point scales allow to distribute an array of points equally into a given range interval. Example: https://observablehq.com/@d3/d3-scalepoint
             const x = d3
               .scalePoint()
               .domain(node.children.map((it) => it.name))
               .range([0, svgWidth])
-              .padding(2)
+              .padding(1)
               .round(true);
             return x(d.name);
           })
-          .attr('cy', () => nodeIndex * 150)
+          .attr('cy', () => nodeIndex * 180)
           .on('mouseover', function (event, d, i) {
+            // hightlight root
+            d3.select('circle#root')
+              .attr('stroke', 'black')
+              .attr('stroke-width', 2);
+            // hightlight other lines and circles
             highlight(d.id);
           })
           .on('mouseout', function (event, d, i) {
-            d3.selectAll('path').attr('stroke', 'green');
+            d3.selectAll('path')
+              .attr('stroke', 'red')
+              .attr('stroke-width', 1);
+            d3.selectAll('circle').attr('stroke', 'none');
           });
 
         return nodeGroups;
@@ -101,7 +107,11 @@ const nonHierarchicTree = () => {
     };
 
     const generateLines = (wrapper) => {
-      const linesGroup = wrapper.append('g').attr('id', 'lines');
+      const linesGroup = wrapper
+        .append('g')
+        // append element as first child of its parent
+        .lower()
+        .attr('id', 'lines');
 
       d3.selectAll('circle').each(function (d) {
         if (d.children) {
@@ -109,24 +119,20 @@ const nonHierarchicTree = () => {
             const parentCircle = this;
             const childCircle = d3.select(`#${child}`);
 
-            const points = [
-              // start point [x, y]
-              [
-                parentCircle.attributes.cx.value,
-                parentCircle.attributes.cy.value,
-              ],
-              // middle curve point [x, y]
-              // [
-              //   `${parseInt(childCircle.attr('cx'), 10) + 15}`,
-              //   `${
-              //     parseInt(parentCircle.attributes.cy.value, 10) + 35
-              //   }`,
-              // ],
-              // end point [x, y]
-              [childCircle.attr('cx'), childCircle.attr('cy')],
-            ];
+            const parentX = parentCircle.attributes.cx.value;
+            const parentY = parentCircle.attributes.cy.value;
 
-            console.log(points);
+            const childX = childCircle.attr('cx');
+            const childY = childCircle.attr('cy');
+
+            const curveX = childX;
+            const curveY = parentY;
+
+            const points = [
+              [parentX, parentY],
+              [curveX, curveY],
+              [childX, childY],
+            ];
 
             const pathData = d3.line().curve(d3.curveCardinal)(
               points,
@@ -136,7 +142,7 @@ const nonHierarchicTree = () => {
               .append('path')
               .attr('d', pathData)
               .attr('id', `l-${childCircle.attr('id')}`)
-              .attr('stroke', 'black')
+              .attr('stroke', 'red')
               .attr('fill', 'none');
           });
         }
@@ -169,8 +175,14 @@ const nonHierarchicTree = () => {
       if (nodeId === 'root') return;
 
       const parentNodes = [];
+      // hightlight selected circle
+      d3.select(`#${nodeId}`)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2);
       // find and hightlight linked path
-      d3.select(`#l-${nodeId}`).attr('stroke', 'red');
+      d3.select(`#l-${nodeId}`)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2);
 
       // find parent circle
       const parent = allNodes.find((it) => {
