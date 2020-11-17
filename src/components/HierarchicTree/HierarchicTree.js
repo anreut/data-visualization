@@ -1,59 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
+import _ from 'lodash';
 import './HierarchicTree.scss';
-
-// const data = [
-//   {
-//     name: 'slice',
-//     children: [
-//       {
-//         name: 'slice',
-//         id: 'slice',
-//         children: ['a1', 'a2', 'a3', 'a4'],
-//       },
-//     ],
-//   },
-//   {
-//     name: 'subnets',
-//     children: [
-//       { name: 'a1', id: 'a1', children: ['b1', 'b3'] },
-//       { name: 'a2', id: 'a2', children: ['b2', 'b3'] },
-//       { name: 'a3', id: 'a3', children: ['b4', 'b5'] },
-//       { name: 'a4', id: 'a4', children: ['b5', 'b6'] },
-//     ],
-//   },
-//   {
-//     name: 'mfs',
-//     children: [
-//       { name: 'b1', id: 'b1', children: ['c1'] },
-//       { name: 'b2', id: 'b2', children: ['c2', 'c3'] },
-//       { name: 'b3', id: 'b3', children: ['c4'] },
-//       { name: 'b4', id: 'b4', children: ['c5'] },
-//       { name: 'b5', id: 'b5', children: ['c6'] },
-//       { name: 'b6', id: 'b6', children: ['c7', 'c8'] },
-//     ],
-//   },
-//   {
-//     name: 'nodes',
-//     children: [
-//       { name: 'c1', id: 'c1', children: ['d1'] },
-//       { name: 'c2', id: 'c2', children: ['d1', 'd2'] },
-//       { name: 'c3', id: 'c3', children: ['d2'] },
-//       { name: 'c4', id: 'c4', children: ['d3'] },
-//       { name: 'c5', id: 'c5', children: ['d3', 'd4'] },
-//       { name: 'c6', id: 'c6', children: ['d4'] },
-//     ],
-//   },
-//   {
-//     name: 'dcs',
-//     children: [
-//       { name: 'd1', id: 'd1' },
-//       { name: 'd2', id: 'd2' },
-//       { name: 'd3', id: 'd3' },
-//       { name: 'd4', id: 'd4' },
-//     ],
-//   },
-// ];
 
 const data = [
   {
@@ -145,30 +93,25 @@ const hierarchicTree = () => {
           .attr('cx', (d, i) => {
             return i * (config.nodeRadius * 2 + config.step);
           })
-          .attr('cy', () => itemIndex * 180);
+          .attr('cy', () => itemIndex * 180)
+          .on('mouseover', function (event, d, i) {
+            // hightlight root
+            d3.select('circle#root')
+              .attr('stroke', 'black')
+              .attr('stroke-width', 2);
+            // hightlight other lines and circles
+            highlight(d.id);
+          })
+          .on('mouseout', function (event, d, i) {
+            d3.selectAll('path')
+              .attr('stroke', 'green')
+              .attr('stroke-width', 1);
+            d3.selectAll('circle').attr('stroke', 'none');
+          });
 
         return itemGroup;
       });
     };
-
-    // const renderLines = (wrapper) => {
-    //   const linesGroup = wrapper
-    //     .append('g')
-    //     .lower()
-    //     .attr('id', 'lines');
-
-    //   data.forEach((item) => {
-    //     item.children.forEach((it) => {
-    //       if (it.children) {
-    //         it.children.forEach((child) => {
-    //           const parentC = this;
-    //           const childC = d3.select(`circle#${child}`).node();
-    //           console.log(parentC);
-    //         });
-    //       }
-    //     });
-    //   });
-    // };
 
     const renderLines = (wrapper) => {
       const linesGroup = wrapper
@@ -179,17 +122,20 @@ const hierarchicTree = () => {
       d3.selectAll('circle').each(function (d) {
         if (d.children) {
           d.children.forEach((child) => {
-            const parentC = this;
-            const childC = d3.select(`circle#${child}`).node();
+            const parentCircle = this;
+            const childCircle = d3.select(`circle#${child}`).node();
 
-            const parentX = parentC.getBoundingClientRect().x + 15;
-            const parentY = parentC.getBoundingClientRect().y - 30;
+            const parentX =
+              parentCircle.getBoundingClientRect().x + 15;
+            const parentY =
+              parentCircle.getBoundingClientRect().y - 30;
 
-            const childX = childC.getBoundingClientRect().x + 15;
-            const childY = childC.getBoundingClientRect().y - 80;
+            const childX = childCircle.getBoundingClientRect().x + 15;
+            const childY = childCircle.getBoundingClientRect().y - 80;
 
-            const curveX = childX + 20;
-            const curveY = parentY + 55;
+            const middlePoint = (parentX - childX) / 2;
+            const curveX = childX + middlePoint;
+            const curveY = parentY + 45;
 
             const points = [
               [parentX, parentY],
@@ -204,12 +150,65 @@ const hierarchicTree = () => {
             linesGroup
               .append('path')
               .attr('d', pathData)
-              // .attr('id', `l-${childC.attr('id')}`)
+              .attr('id', `l-${childCircle.attributes.id.value}`)
               .attr('stroke', 'green')
               .attr('fill', 'none');
           });
         }
       });
+    };
+
+    const getSortedNodes = () => {
+      const nodes = [];
+
+      data.forEach((it) => {
+        if (it.children) {
+          nodes.push(...it.children);
+        }
+      });
+
+      const root = nodes.find((it) => it.name === 'root');
+
+      // move `root` to the end of the array
+      // first remove it from the array
+      _.pull(nodes, root);
+      // then add a new one to the array
+      const sorted = _.concat(nodes, root);
+      return sorted;
+    };
+
+    // get all nodes and sort it so, that the root is at the end of the array
+    const allNodes = getSortedNodes();
+
+    const highlight = (nodeId) => {
+      if (nodeId === 'root') return;
+
+      const parentNodes = [];
+      // hightlight selected circle
+      d3.select(`#${nodeId}`)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2);
+      // find and hightlight linked path
+      d3.select(`#l-${nodeId}`)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2);
+
+      // find parent circle
+      const parent = allNodes.find((it) => {
+        if (it.children) {
+          return it.children.includes(nodeId);
+        }
+      });
+
+      parentNodes.push(parent);
+
+      const root = allNodes.find((it) => it.name === 'root');
+      const isRoot = _.includes(parentNodes, root);
+
+      // if it reaches the root node - stop function
+      if (!isRoot) {
+        highlight(parent.id);
+      }
     };
 
     svg.append('g').call(renderNodes).call(renderLines);

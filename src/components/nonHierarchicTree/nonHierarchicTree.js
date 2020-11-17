@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import _ from 'lodash';
+import './nonHierarchicTree.scss';
 
 const data = [
   {
@@ -26,11 +27,11 @@ const data = [
     name: 'level_2',
     children: [
       { name: 'b1', id: 'b1', children: ['c1'] },
-      { name: 'b2', id: 'b2', children: ['c2', 'c3'] },
-      { name: 'b3', id: 'b3', children: ['c4'] },
-      { name: 'b4', id: 'b4', children: ['c5'] },
-      { name: 'b5', id: 'b5', children: ['c6'] },
-      { name: 'b6', id: 'b6', children: ['c7', 'c8'] },
+      { name: 'b2', id: 'b2', children: ['c2'] },
+      { name: 'b3', id: 'b3', children: ['c3'] },
+      { name: 'b4', id: 'b4', children: ['c4'] },
+      { name: 'b5', id: 'b5', children: ['c5'] },
+      { name: 'b6', id: 'b6', children: ['c6'] },
     ],
   },
   {
@@ -42,8 +43,6 @@ const data = [
       { name: 'c4', id: 'c4' },
       { name: 'c5', id: 'c5' },
       { name: 'c6', id: 'c6' },
-      { name: 'c7', id: 'c7' },
-      { name: 'c8', id: 'c8' },
     ],
   },
 ];
@@ -62,6 +61,7 @@ const nonHierarchicTree = () => {
       .attr('viewBox', [0, 0, svgWidth, svgHeight])
       .attr('height', svgHeight)
       .attr('width', svgWidth)
+      .attr('id', 'non-hierarchic-tree')
       .style('overflow', 'visible')
       .style('border', '1px solid red');
 
@@ -119,14 +119,19 @@ const nonHierarchicTree = () => {
             const parentCircle = this;
             const childCircle = d3.select(`#${child}`);
 
-            const parentX = parentCircle.attributes.cx.value;
-            const parentY = parentCircle.attributes.cy.value;
+            const parentX = parseInt(
+              parentCircle.attributes.cx.value,
+              10,
+            );
+            const parentY =
+              parseInt(parentCircle.attributes.cy.value, 10) + 30;
 
-            const childX = childCircle.attr('cx');
-            const childY = childCircle.attr('cy');
+            const childX = parseInt(childCircle.attr('cx'), 10);
+            const childY = parseInt(childCircle.attr('cy'), 10) - 30;
 
-            const curveX = childX;
-            const curveY = parentY;
+            const middlePoint = (parentX - childX) / 2;
+            const curveX = childX + middlePoint;
+            const curveY = parentY + 40;
 
             const points = [
               [parentX, parentY],
