@@ -124,10 +124,10 @@ const nonHierarchicTree = () => {
               10,
             );
             const parentY =
-              parseInt(parentCircle.attributes.cy.value, 10) + 30;
+              parseInt(parentCircle.attributes.cy.value, 10) + 25;
 
             const childX = parseInt(childCircle.attr('cx'), 10);
-            const childY = parseInt(childCircle.attr('cy'), 10) - 30;
+            const childY = parseInt(childCircle.attr('cy'), 10) - 25;
 
             const middlePoint = (parentX - childX) / 2;
             const curveX = childX + middlePoint;
