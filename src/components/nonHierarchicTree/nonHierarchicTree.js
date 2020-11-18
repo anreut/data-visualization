@@ -212,7 +212,7 @@ const nonHierarchicTree = () => {
 
   return (
     <div ref={canvas}>
-      <h3>Nonhierarchic Tree</h3>
+      <h3>Hierarchic Tree using scalePoint</h3>
     </div>
   );
 };

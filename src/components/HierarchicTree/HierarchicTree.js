@@ -212,17 +212,11 @@ const hierarchicTree = () => {
     };
 
     svg.append('g').call(renderNodes).call(renderLines);
-
-    // center line
-    // svg
-    //   .append('path')
-    //   .attr('d', `M 450 0 L 450 500`)
-    //   .attr('stroke', 'black');
   });
 
   return (
     <div ref={canvas}>
-      <h3>Hierarchic Tree</h3>
+      <h3>Custom Hierarchic Tree</h3>
     </div>
   );
 };

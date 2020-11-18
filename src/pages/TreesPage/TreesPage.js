@@ -7,12 +7,12 @@ const TreesPage = () => {
   return (
     <div>
       <Navigation />
-      <div>
-        <HierarchicTree />
-      </div>
       {/* <div>
-        <NonHierarchicTree />
+        <HierarchicTree />
       </div> */}
+      <div>
+        <NonHierarchicTree />
+      </div>
     </div>
   );
 };
