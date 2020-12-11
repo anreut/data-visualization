@@ -20,7 +20,7 @@ const DiceBox = ({ position }) => {
   );
 
   return (
-    <mesh ref={meshRef} position={position}>
+    <mesh ref={meshRef} position={position} castShadow>
       <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
       <meshStandardMaterial attachArray="material" map={texture_1} />
       <meshStandardMaterial attachArray="material" map={texture_2} />

@@ -13,7 +13,7 @@ const PlainBox = ({ position, color, args }) => {
 
   return (
     // to display color the light should be specified
-    <mesh ref={meshRef} position={position}>
+    <mesh ref={meshRef} position={position} castShadow>
       {/* args - constructor arguments (width, height, depth) */}
       <boxBufferGeometry attach="geometry" args={args} />
       <meshStandardMaterial attach="material" color={color} />
