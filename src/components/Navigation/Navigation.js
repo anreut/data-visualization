@@ -14,6 +14,9 @@ const Navigation = () => {
         <li>
           <Link to="/trees">Trees</Link>
         </li>
+        <li>
+          <Link to="/three-js">ThreeJS</Link>
+        </li>
       </ul>
     </div>
   );

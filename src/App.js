@@ -8,6 +8,7 @@ import {
 import HomePage from './pages/HomePage';
 import ChartsPage from './pages/ChatsPage';
 import TreesPage from './pages/TreesPage';
+import ThreeJSPage from './pages/ThreeJSPage';
 
 const App = () => {
   return (
@@ -21,6 +22,9 @@ const App = () => {
         </Route>
         <Route path="/trees">
           <TreesPage />
+        </Route>
+        <Route path="/three-js">
+          <ThreeJSPage />
         </Route>
       </Switch>
     </Router>
